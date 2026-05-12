@@ -1,9 +1,13 @@
 ''' Autor: Eduardo Rabelo Marques
-    Última atualização: 29/09/2025 
-    Versão: 2.3.1
+    Última atualização: 12/05/2026 
+    Versão: 2.3.2
     Mudanças na versão:
-    -Alteração na ordem de captura dos dados colocando o periodo de vigência antes do objeto.
-    -Data de publicação agora vem depois de Entidades Vinculadas e tem seu campo vazio agora vem com "Termo Base:" antes da data em um texto só '''
+    - Correção de erro na falta de valor de empenho, agora o valor é registrado como '0' quando não existe valor.
+    
+    Correções futuras a serem feitas:
+    - Implementar uma tratativa de erro melhor em cada um dos campos, para evitar que o codigo pare de funcionar quando
+    um campo ou informação não for encontrada, ou vir em um formato diferente do esperado.
+    - Implementar uma função para utilizar sempre um driver atualizado, para evitar erros de incompatibilidade entre o driver e o navegador.'''
 
 import os
 import pandas as pd
@@ -97,12 +101,12 @@ url = "https://www.codevasf.gov.br/acesso-a-informacao/licitacoes-e-contratos/co
 driver.get(url)
 ano_celebracao = solicitar_ano()
 qtd_contratos = configura_pagina()
-canalhas = True
+contratos = True
 
 contador_refresh = 0
-index = 4  # Inicia o índice no valor 4
+index = 4   # Inicia o índice no valor 4
 
-while canalhas:
+while contratos:
     try:
         inicio = time.time()
         sucesso = False
@@ -120,7 +124,7 @@ while canalhas:
         # Extração de elementos
         elemento = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="modalPanel"]/div/table/tbody/tr[2]/td'))).text
         tipo_instrumento, numero_instrumento = elemento.rsplit(' ', 1) # print(f"Tipo de Instrumento: {tipo_instrumento}")
-        print(f"\t\tN° Instrumento: {Fore.LIGHTMAGENTA_EX} {numero_instrumento}\n")
+        print(f"\n\n\t\tN° Instrumento: {Fore.LIGHTMAGENTA_EX} {numero_instrumento}")
         
         periodo_vigencia = wait.until(EC.visibility_of_element_located((By.XPATH, '//td[text()="Período de Vigência :"]/following-sibling::td'))).text
         
@@ -132,7 +136,7 @@ while canalhas:
                 periodo_final = 'Não existe'
         elif periodo_vigencia == '-':
             periodo_inicial, periodo_final = 'Não existe', 'Não existe' # print(f"Período de Vigência: {periodo_inicial} - {periodo_final}")
-
+              
         try:
             objeto = driver.find_element(By.XPATH, '//td[text()="Objeto :"]/following-sibling::td').text # print(f"Objeto: {objeto}")
         except NoSuchElementException:
@@ -171,15 +175,15 @@ while canalhas:
         
         try:
             tr_data_publicacao = driver.find_element(By.XPATH, '//td[text()="Data de Publicação:"]/ancestor::tr')
-            print(f"Campo Data de Publicação encontrado: {tr_data_publicacao.text.strip()}")
+            # print(f"Campo Data de Publicação encontrado: {tr_data_publicacao.text.strip()}")
             td_seguinte_data_publicacao = tr_data_publicacao.find_element(By.XPATH, 'following-sibling::tr/td[2]').text.strip()
-            print(f"Campo Data de Publicação capturado: {td_seguinte_data_publicacao}")
+            # print(f"Campo Data de Publicação capturado: {td_seguinte_data_publicacao}")
             if td_seguinte_data_publicacao.startswith('Termo Base:'):
                 split_data = td_seguinte_data_publicacao.split('Termo Base:')
                 data_publicacao = split_data[1].strip() 
                 if data_publicacao == '':
                     data_publicacao = 'Não existe'
-                print(f"Data de Publicação extraída: {data_publicacao}")
+                # print(f"Data de Publicação extraída: {data_publicacao}")
         except (NoSuchElementException, TimeoutException):
             pass
 
@@ -212,7 +216,10 @@ while canalhas:
                     numero_empenho = numero_empenho_element.text.strip()
                     link_empenho = numero_empenho_element.get_attribute('href')
                     valor_empenho = tr.find_element(By.XPATH, './td[3]').text.strip()
-                    valor_empenho = valor_empenho.replace('.', '').replace(',', '.')
+                    if valor_empenho == '':
+                        valor_empenho = '0'
+                    else:
+                        valor_empenho = valor_empenho.replace('.', '').replace(',', '.')
                     descricao_empenho = tr.find_element(By.XPATH, './td[4]').text.strip()
                     empenhos.append({ 'Número de Empenho': numero_empenho, 'Link de Empenho': link_empenho,
                         'Valor Empenho': valor_empenho, 'Descrição Empenho': descricao_empenho })
@@ -263,7 +270,7 @@ while canalhas:
             print(f"\n\t{Fore.LIGHTBLUE_EX}Site recarregado com sucesso após refresh.")
 
         if restante_contratos == 0:
-            canalhas = False
+            contratos = False
         
     except (NoSuchElementException):
         # Sai do loop se não houver mais contratos para acessar
