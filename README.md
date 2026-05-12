@@ -7,10 +7,10 @@
 Codevasf/
       ├── Códigos/
       │     ├── Extração_Doações/
-      │     │   └── WebScrapingDoacoes_v3.2.4.py
+      │     │   └── Codigo de WebScraping de Doacoes
       │     │
       │     ├── Extração_Instrumentos/
-      │     │   └── WebScrapingContratos_v2.2.3.py
+      │     │   └── Codigo de WebScraping de Contratos
       │     │
       │     ├── Scripts_Analise/
       │     │   ├── Analisa_erros.py
@@ -49,9 +49,14 @@ Codevasf/
 
  ### **Pré-requisitos**:
  >  - Python 3 instalado  
- >  - Google Chrome instalado  
- >  - ChromeDriver compatível com a versão do navegador
- >      - Caso não possua, instale em: https://developer.chrome.com/docs/chromedriver/downloads?hl=pt-br
+ >  - Microsoft Edge instalado  
+ >  - Edge WebDriver compatível com a versão do navegador
+ >      - Caso não possua, instale em: https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH
+<!-- Melhorar a descrição de uso de Google Chrome caso o Edge não funcione 
+ >  - Tenha o Google Chrome instalado e tenha instalado o WebDriver compatível com a versão do seu navegador
+ >  - Adquira o Driver atual em: https://developer.chrome.com/docs/chromedriver/downloads?hl=pt-br
+ >  - Mude os caminhos no codigo para referenciar o driver Chrome e funcionalidades do Selenium para usar o Chrome Driver
+ -->
  >  - Clone este repositório
  >  - Instale os pacotes necessários  
 
@@ -68,7 +73,6 @@ Codevasf/
    ```bash
    python WebScrapingDoacoes_v3.2.4.py
    ```
-   
 ---
 
 ## 👥 Autoria
