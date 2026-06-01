@@ -1,6 +1,6 @@
 ''' Autor: Eduardo Rabelo Marques
     Última atualização: 12/05/2026 
-    Versão: 2.3.2
+    Versão: 2.3.3
     Mudanças na versão:
     - Atualização da URL para novo endereço de uso para pesquisa das informações.
     
