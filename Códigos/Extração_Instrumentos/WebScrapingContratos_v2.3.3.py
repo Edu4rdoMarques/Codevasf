@@ -2,7 +2,7 @@
     Última atualização: 12/05/2026 
     Versão: 2.3.2
     Mudanças na versão:
-    - Correção de erro na falta de valor de empenho, agora o valor é registrado como '0' quando não existe valor.
+    - Atualização da URL para novo endereço de uso para pesquisa das informações.
     
     Correções futuras a serem feitas:
     - Implementar uma tratativa de erro melhor em cada um dos campos, para evitar que o codigo pare de funcionar quando
@@ -97,7 +97,7 @@ wait = WebDriverWait(driver, 20) # Definição de espera
 waitUrl = WebDriverWait(driver, 50)
 
 
-url = "https://www.codevasf.gov.br/acesso-a-informacao/licitacoes-e-contratos/contratos" # Acessar o site
+url = "https://legado-site.codevasf.gov.br/acesso-a-informacao/licitacoes-e-contratos/contratos" # Acessar o site
 driver.get(url)
 ano_celebracao = solicitar_ano()
 qtd_contratos = configura_pagina()
